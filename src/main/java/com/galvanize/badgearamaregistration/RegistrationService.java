@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class RegistrationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationService.class);
@@ -59,5 +61,20 @@ public class RegistrationService {
         LOGGER.info("Sending message to the queue using routingKey {}. Message= {}", routingKey, data);
         rabbitTemplate.convertAndSend(exchange, routingKey, data);
         LOGGER.info("The message has been sent to the queue.");
+    }
+
+    public ExtendedPersonFrontEnd getPersonByPhoneNumber(Long phoneNumber) {
+        Optional<Person> optPerson = personRepository.findById(phoneNumber);
+        if (!optPerson.isPresent())
+            throw new IllegalArgumentException();
+        Person person = optPerson.get();
+
+        return ExtendedPersonFrontEnd.builder()
+                .phoneNumber(Long.toString(person.getPhoneNumber()))
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName())
+                .company(person.getCompany())
+                .build();
+
     }
 }
