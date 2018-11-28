@@ -36,7 +36,7 @@ public class RegistrationService {
                 .build();
         personRepository.save(person);
 
-        //sendMessage(appExchangeName, appRoutingKey, extendedPerson);
+        sendMessage(appExchangeName, appRoutingKey, extendedPerson);
 
         return true;
     }
