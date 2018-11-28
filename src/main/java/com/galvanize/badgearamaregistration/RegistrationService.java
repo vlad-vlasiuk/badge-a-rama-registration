@@ -26,12 +26,13 @@ public class RegistrationService {
     @Transactional
     public Boolean register(ExtendedPersonFrontEnd personFrontEnd) {
         ExtendedPerson extendedPerson = transformFrontEndPerson(personFrontEnd);
-        personRepository.save(Person.builder()
+        Person person = Person.builder()
                 .phoneNumber(extendedPerson.getPhoneNumber())
                 .firstName(extendedPerson.getFirstName())
                 .lastName(extendedPerson.getLastName())
                 .company(extendedPerson.getCompany())
-                .build());
+                .build();
+        personRepository.save(person);
 
         sendMessage(appExchangeName, appRoutingKey, extendedPerson);
 
